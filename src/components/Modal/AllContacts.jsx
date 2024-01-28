@@ -6,14 +6,17 @@ const AllContacts = () => {
 
     const [allContactData, setAllContactData] = useState([])
     const [isEven, setIsEven] = useState(false)
+    const [page, setPage] = useState(2)
 
     const allContactRef = useRef()
     const closeAllContactRef = useRef()
+    const modalBodyRef = useRef()
 
     const navigate = useNavigate()
 
-    const fetchAllContact = async () => {
-        const response = await getAllContact()
+    const fetchAllContact = async (params) => {
+
+        const response = await getAllContact(params)
         if (response?.results) {
             setAllContactData(response?.results)
         }
@@ -28,6 +31,22 @@ const AllContacts = () => {
             return true
         }
     }
+
+    const handleInputChange = async (e) => {
+        fetchAllContact(`?search=${e.target.value}`)
+    }
+
+
+    const handleModalBodyScroll = () => {
+        const modalBody = modalBodyRef.current;
+        if (modalBody.scrollHeight - modalBody.scrollTop === modalBody.clientHeight) {
+            fetchAllContact(`?page=${page}`)
+            modalBodyRef.current.scrollTop = 0;
+            setPage(prev => prev + 1)
+        }
+
+    }
+
 
 
 
@@ -68,7 +87,10 @@ const AllContacts = () => {
                             </div>
                             <button ref={closeAllContactRef} type="button" className="btn-close d-none" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body" ref={modalBodyRef} onScroll={handleModalBodyScroll} >
+                            <div className="mb-3">
+                                <input type="search" className="form-control " placeholder="Search Contact..." name="Search" onChange={handleInputChange} />
+                            </div>
                             <table className="table table-striped ">
                                 <thead>
                                     <tr>

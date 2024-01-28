@@ -6,12 +6,14 @@ const UsContact = () => {
     const navigate = useNavigate()
     const [usContactData, setUsContactData] = useState([])
     const [isEven, setIsEven] = useState(false)
+    const [page, setPage] = useState(2)
 
     const usContactRef = useRef()
     const closeUsContactRef = useRef()
+    const usContactModalBodyRef = useRef()
 
-    const fetchUsContact = async () => {
-        const response = await getUsContact()
+    const fetchUsContact = async (params) => {
+        const response = await getUsContact(params)
         if (response?.results) {
             setUsContactData(response?.results)
         }
@@ -25,6 +27,20 @@ const UsContact = () => {
         else {
             return true
         }
+    }
+
+    const handleInputChange = async (e) => {
+        fetchUsContact(`?search=${e.target.value}`)
+    }
+
+    const handleModalBodyScroll = () => {
+        const modalBody = usContactModalBodyRef.current;
+        if (modalBody.scrollHeight - modalBody.scrollTop === modalBody.clientHeight) {
+            fetchUsContact(`?page=${page}`)
+            usContactModalBodyRef.current.scrollTop = 0;
+            setPage(prev => prev + 1)
+        }
+
     }
 
 
@@ -69,7 +85,10 @@ const UsContact = () => {
                             </div>
                             <button ref={closeUsContactRef} type="button" className="btn-close d-none" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body" ref={usContactModalBodyRef} onScroll={handleModalBodyScroll}>
+                            <div className="mb-3">
+                                <input type="search" className="form-control " placeholder="Search Contact..." name="Search" onChange={handleInputChange} />
+                            </div>
                             <table className="table table-striped ">
                                 <thead>
                                     <tr>
