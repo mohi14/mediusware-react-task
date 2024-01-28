@@ -1,13 +1,35 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUsContact } from '../../api/Contact';
 
 const UsContact = () => {
     const navigate = useNavigate()
+    const [usContactData, setUsContactData] = useState([])
+    const [isEven, setIsEven] = useState(false)
 
     const usContactRef = useRef()
     const closeUsContactRef = useRef()
 
+    const fetchUsContact = async () => {
+        const response = await getUsContact()
+        if (response?.results) {
+            setUsContactData(response?.results)
+        }
+
+    }
+
+    const handleFiltering = (data) => {
+        if (isEven) {
+            return data?.id % 2 === 0
+        }
+        else {
+            return true
+        }
+    }
+
+
     useEffect(() => {
+        fetchUsContact()
         usContactRef?.current.click()
     }, [])
     return (
@@ -33,25 +55,43 @@ const UsContact = () => {
             </button>
 
             <div className="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div className="modal-content">
                         <div className="modal-header">
                             {/* <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1> */}
                             <div className='d-flex justify-content-center gap-4 align-items-center w-100'>
-                                <button className='btn all_contacts_btn'>All Contacts</button>
-                                <button className='btn us_contacts_btn'>Us Contacts</button>
+                                <button className='btn all_contacts_btn' onClick={() => {
+                                    closeUsContactRef?.current.click()
+                                    navigate("/problem-2/allContacts")
+                                }}>All Contacts</button>
+                                <button className='btn us_contacts_btn' >Us Contacts</button>
                                 <button className='btn close_btn' onClick={() => closeUsContactRef.current.click()}>Close</button>
                             </div>
                             <button ref={closeUsContactRef} type="button" className="btn-close d-none" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            ...
+                            <table className="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">PHONE</th>
+                                        <th scope="col">COUNTRY</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {usContactData?.length > 0 && usContactData.filter(handleFiltering).map((item, idx) => <tr key={idx}>
+                                        <td >{item.id}</td>
+                                        <td >{item?.phone}</td>
+                                        <td >{item?.country.name}</td>
+                                    </tr>)}
+                                </tbody>
+                            </table>
                         </div>
                         <div className="modal-footer justify-content-start">
                             {/* <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
-                            <div className="form-check">
-                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                <label className="form-check-label" for="flexCheckDefault">
+                            <div className="form-check" >
+                                <input style={{ cursor: "pointer" }} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={() => setIsEven(!isEven)} />
+                                <label style={{ cursor: "pointer" }} className="form-check-label" htmlFor="flexCheckDefault">
                                     Only even
                                 </label>
                             </div>

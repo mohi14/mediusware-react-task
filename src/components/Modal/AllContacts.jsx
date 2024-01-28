@@ -5,6 +5,7 @@ import { getAllContact } from '../../api/Contact';
 const AllContacts = () => {
 
     const [allContactData, setAllContactData] = useState([])
+    const [isEven, setIsEven] = useState(false)
 
     const allContactRef = useRef()
     const closeAllContactRef = useRef()
@@ -19,7 +20,16 @@ const AllContacts = () => {
 
     }
 
-    console.log(allContactData, "v")
+    const handleFiltering = (data) => {
+        if (isEven) {
+            return data?.id % 2 === 0
+        }
+        else {
+            return true
+        }
+    }
+
+
 
     useEffect(() => {
         allContactRef?.current.click()
@@ -45,12 +55,15 @@ const AllContacts = () => {
             </button>
 
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div className="modal-content">
                         <div className="modal-header">
                             <div className='d-flex justify-content-center gap-4 align-items-center w-100'>
-                                <button className='btn all_contacts_btn'>All Contacts</button>
-                                <button className='btn us_contacts_btn'>Us Contacts</button>
+                                <button className='btn all_contacts_btn' >All Contacts</button>
+                                <button className='btn us_contacts_btn' onClick={() => {
+                                    closeAllContactRef?.current.click()
+                                    navigate("/problem-2/usContacts")
+                                }}>Us Contacts</button>
                                 <button className='btn close_btn' onClick={() => closeAllContactRef?.current.click()}>Close</button>
                             </div>
                             <button ref={closeAllContactRef} type="button" className="btn-close d-none" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -65,7 +78,7 @@ const AllContacts = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {allContactData.length > 0 && allContactData.map((item, idx) => <tr key={idx}>
+                                    {allContactData.length > 0 && allContactData.filter(handleFiltering).map((item, idx) => <tr key={idx}>
                                         <td >{item.id}</td>
                                         <td >{item?.phone}</td>
                                         <td >{item?.country.name}</td>
@@ -74,9 +87,9 @@ const AllContacts = () => {
                             </table>
                         </div>
                         <div className="modal-footer justify-content-start">
-                            <div className="form-check">
-                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                            <div className="form-check" >
+                                <input style={{ cursor: "pointer" }} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={() => setIsEven(!isEven)} />
+                                <label style={{ cursor: "pointer" }} className="form-check-label" htmlFor="flexCheckDefault">
                                     Only even
                                 </label>
                             </div>
