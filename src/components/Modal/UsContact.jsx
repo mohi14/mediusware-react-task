@@ -7,6 +7,7 @@ const UsContact = () => {
     const [usContactData, setUsContactData] = useState([])
     const [isEven, setIsEven] = useState(false)
     const [page, setPage] = useState(2)
+    const [selectedContact, setSelectedContact] = useState(null)
 
     const usContactRef = useRef()
     const closeUsContactRef = useRef()
@@ -100,7 +101,7 @@ const UsContact = () => {
                                 <tbody>
                                     {usContactData?.length > 0 && usContactData.filter(handleFiltering).map((item, idx) => <tr key={idx}>
                                         <td >{item.id}</td>
-                                        <td >{item?.phone}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#exampleModalUs" style={{ cursor: "pointer" }} onClick={() => setSelectedContact(item)}>{item?.phone}</td>
                                         <td >{item?.country.name}</td>
                                     </tr>)}
                                 </tbody>
@@ -119,6 +120,26 @@ const UsContact = () => {
                 </div>
             </div>
 
+
+            <div className="modal fade" id="exampleModalUs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+
+                        <div className="modal-body">
+                            <div className='d-flex justify-content-between'>
+                                <p className='fs-4 fw-bold'>Details</p> <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div className='mt-4'>
+
+                                <p><span className='fw-semibold'>PHONE:</span> {selectedContact?.phone} </p>
+                                <p> <span className='fw-semibold'>COUNTRY:</span> {selectedContact?.country?.name} </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

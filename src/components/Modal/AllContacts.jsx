@@ -7,6 +7,7 @@ const AllContacts = () => {
     const [allContactData, setAllContactData] = useState([])
     const [isEven, setIsEven] = useState(false)
     const [page, setPage] = useState(2)
+    const [selectedContact, setSelectedContact] = useState(null)
 
     const allContactRef = useRef()
     const closeAllContactRef = useRef()
@@ -32,6 +33,8 @@ const AllContacts = () => {
         }
     }
 
+
+
     const handleInputChange = async (e) => {
         fetchAllContact(`?search=${e.target.value}`)
     }
@@ -48,6 +51,7 @@ const AllContacts = () => {
     }
 
 
+    console.log(selectedContact, "selectedContact")
 
 
     useEffect(() => {
@@ -102,7 +106,7 @@ const AllContacts = () => {
                                 <tbody>
                                     {allContactData.length > 0 && allContactData.filter(handleFiltering).map((item, idx) => <tr key={idx}>
                                         <td >{item.id}</td>
-                                        <td >{item?.phone}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#exampleModalAll" onClick={() => setSelectedContact(item)} style={{ cursor: "pointer" }}>{item?.phone}</td>
                                         <td >{item?.country.name}</td>
                                     </tr>)}
                                 </tbody>
@@ -120,6 +124,26 @@ const AllContacts = () => {
                 </div>
             </div>
 
+
+            <div className="modal fade" id="exampleModalAll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+
+                        <div className="modal-body">
+                            <div className='d-flex justify-content-between'>
+                                <p className='fs-4 fw-bold'>Details</p> <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div className='mt-4'>
+
+                                <p><span className='fw-semibold'>PHONE:</span> {selectedContact?.phone} </p>
+                                <p> <span className='fw-semibold'>COUNTRY:</span> {selectedContact?.country?.name} </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </>
 
     );
