@@ -3,6 +3,8 @@ import Problem1 from "./components/Problem-1.jsx";
 import Menu from "./components/Menu.jsx";
 import Problem2 from "./components/Problem-2.jsx";
 import Index from "./components/Index.jsx";
+import AllContacts from "./components/Modal/AllContacts.jsx";
+import UsContact from "./components/Modal/UsContact.jsx";
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
         <Route path="/" element={<Menu />}>
           <Route path="problem-1" element={<Problem1 />} />
           <Route path="problem-2" element={<Problem2 />} />
+          <Route path="problem-2/allContacts" element={<AllContacts />} />
+          <Route path="problem-2/usContacts" element={<UsContact />} />
         </Route>
       </Routes>
     </>

@@ -1,3 +1,44 @@
 @import "abstract/variables";
 @import 'bootstrap/scss/bootstrap.scss';
 @import "abstract/base";
+
+
+
+
+.all_contacts_btn {
+    background-color: #46139f;
+    color: white !important;
+    font-weight: 500;
+    transition: 0.3s ease-in-out;
+}
+
+.all_contacts_btn:hover {
+    border: 1px solid #46139f;
+    color: #46139f !important;
+
+}
+
+.us_contacts_btn {
+    background-color: #ff7f50;
+    color: white !important;
+    font-weight: 500;
+    transition: 0.3s ease-in-out;
+}
+
+.us_contacts_btn:hover {
+    border: 1px solid #ff7f50;
+    color: #ff7f50 !important;
+}
+
+.close_btn {
+    border: 1px solid #46139f;
+    color: #46139f;
+    font-weight: 500;
+    background-color: white;
+    transition: 0.3s ease-in-out;
+}
+
+.close_btn:hover {
+    background-color: #46139f;
+    color: white !important;
+}
